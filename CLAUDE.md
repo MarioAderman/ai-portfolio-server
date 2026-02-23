@@ -11,4 +11,4 @@ A dual-protocol personal portfolio: MCP server + A2A agent. Both serve the same 
 - **MCP server:** `src/mcp_server.py` — FastMCP, port 8000, path `/mcp`
 - **A2A agent:** `src/a2a_server.py` — a2a-sdk, port 9000
 - **Git commits:** Single-line commit message. Never include Co-Authored-By
-- **Dev docs:** Tracked in `~/projects/freelancer-on-the-build/dev/active/mcp-portfolio-server/`
+- **Dev docs:** Tracked locally in `~/projects/freelancer-on-the-build/dev/active/mcp-portfolio-server/`
