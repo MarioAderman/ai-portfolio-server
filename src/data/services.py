@@ -11,14 +11,14 @@ SERVICES = [
             "Automated lead qualification pipeline with AI scoring",
             "Document processing workflow with LLM extraction",
         ],
-        "tech": ["n8n", "Python", "REST APIs", "Webhooks"],
+        "tech": ["n8n", "Python", "JavaScript", "REST APIs", "Webhooks"],
     },
     {
         "name": "AI Chatbots & Agents",
         "description": (
             "Build intelligent conversational agents using LangChain and LangGraph. "
             "Multi-agent architectures, tool-calling, RAG for knowledge bases, "
-            "and integration with messaging platforms (Telegram, WhatsApp, web)."
+            "and integration with messaging platforms (Telegram, Meta Suite, web)."
         ),
         "examples": [
             "Customer service bot with booking, FAQ, and escalation",

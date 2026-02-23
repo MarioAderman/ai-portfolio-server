@@ -33,58 +33,65 @@ PROJECTS = [
     {
         "name": "Personal Finance AI Agent",
         "slug": "finance-agent",
-        "one_liner": "LangGraph-powered financial assistant with real bank data, multi-turn conversation, and persistent memory",
-        "tech_stack": ["LangGraph", "Python", "Anthropic Claude", "Gradio", "PostgreSQL"],
+        "one_liner": "LangGraph-powered financial advisor with 9 tools, chart generation, CRUD with human-in-the-loop, and multi-provider LLM support",
+        "tech_stack": ["LangGraph", "LangChain", "Python", "OpenAI", "Anthropic", "Google", "HuggingFace", "Gradio", "PostgreSQL", "matplotlib", "LangSmith"],
         "problem": (
             "Personal finance tracking is tedious — switching between bank apps, "
             "spreadsheets, and calculators. Needed an AI assistant that understands "
-            "your actual financial data and can answer questions conversationally."
+            "your financial data and can answer questions, generate charts, and "
+            "manage transactions conversationally."
         ),
         "solution": (
-            "Built a LangGraph agent that connects to real bank transaction data, "
-            "maintains persistent conversation memory, and provides financial insights "
-            "through a Gradio chat interface. Uses Claude as the reasoning engine "
-            "with custom tools for querying and analyzing transaction history."
+            "Built a LangGraph agent with 9 specialized tools for querying, analyzing, "
+            "and managing financial data through a Gradio chat interface. Supports "
+            "multiple LLM providers (OpenAI, Anthropic, Google, HuggingFace) with "
+            "runtime switching. Includes a demo mode with seed data for showcasing."
         ),
         "key_features": [
             "LangGraph state machine with tool-calling and multi-turn memory",
-            "Real bank data integration — not mock data",
-            "Custom financial analysis tools (spending by category, trends, summaries)",
-            "Gradio web interface for interactive chat",
-            "Persistent PostgreSQL conversation memory across sessions",
+            "9 tools: SQL queries, account balances, spending by category, recent transactions, chart generation, and full CRUD",
+            "Human-in-the-loop confirmation for all write operations (create, update, delete) via LangGraph interrupt()",
+            "Chart generation with matplotlib — bar, pie, line, and grouped bar charts rendered inline",
+            "Multi-provider LLM support with runtime switching (OpenAI, Anthropic, Google, HuggingFace)",
+            "Chat history with thread resume — persistent PostgreSQL conversation memory across sessions",
+            "LangSmith tracing and evaluation with custom evaluators",
         ],
         "architecture": (
-            "Gradio UI → LangGraph agent (Claude) → Tool router "
-            "→ [Query transactions / Analyze spending / Summarize] "
-            "→ PostgreSQL for data + chat memory → Response to UI"
+            "Gradio Blocks UI → LangGraph StateGraph → agent node (multi-provider LLM) "
+            "→ should_continue router → tools node (9 tools) ↔ agent → END "
+            "→ PostgreSQL for financial data + checkpointer for conversation persistence "
+            "→ LangSmith for tracing"
         ),
     },
     {
-        "name": "MCP Portfolio Server",
-        "slug": "mcp-portfolio",
-        "one_liner": "This server — a deployed MCP server that lets clients query my portfolio from their preferred LLM",
-        "tech_stack": ["FastMCP", "Python", "Streamable HTTP", "Railway"],
+        "name": "AI Portfolio Server",
+        "slug": "ai-portfolio",
+        "one_liner": "Dual-protocol AI portfolio — MCP server for structured tool access + A2A agent for conversational discovery",
+        "tech_stack": ["FastMCP", "a2a-sdk", "Python", "Streamable HTTP", "Llama 3.1 8B", "HF Inference", "Docker", "EasyPanel"],
         "problem": (
             "Traditional portfolios are static — clients read a page and move on. "
             "I wanted potential clients to interact with my portfolio using their "
             "own AI tools, asking specific questions relevant to their needs."
         ),
         "solution": (
-            "Built a FastMCP server deployed as a public Streamable HTTP endpoint. "
-            "Clients add one URL to their MCP-compatible tool (Claude Desktop, Cursor, etc.) "
-            "and can ask questions about my skills, projects, services, and availability. "
+            "Built a dual-protocol server: an MCP server with 7 tools for structured "
+            "portfolio queries, and an A2A agent (\"Have You Met Mario?\") powered by "
+            "Llama 3.1 8B for conversational agent-to-agent interaction. Both share "
+            "the same data layer and deploy as separate Docker services. "
             "The medium demonstrates the skill being sold."
         ),
         "key_features": [
-            "Zero-friction connection — just paste a URL",
-            "Works with any MCP-compatible client (Claude Desktop, Cursor, Claude Code, etc.)",
-            "Structured data: skills by category, project deep-dives, service descriptions",
-            "Deployed and publicly accessible 24/7",
-            "The server itself is a portfolio piece demonstrating MCP expertise",
+            "MCP server: 7 tools (about, skills, services, projects, experience, contact) via Streamable HTTP",
+            "A2A agent: conversational portfolio discovery using Llama 3.1 8B via HF Inference",
+            "Shared data layer — both protocols serve the same content modules",
+            "Zero-friction MCP connection — just paste a URL into any compatible client",
+            "A2A Agent Card at /.well-known/agent-card.json for automated agent discovery",
+            "Deployed on Hostinger VPS via EasyPanel with auto HTTPS",
+            "The server itself is a portfolio piece demonstrating MCP and A2A expertise",
         ],
         "architecture": (
-            "Client's LLM → Streamable HTTP → FastMCP server → "
-            "Tool dispatcher → Structured content from data modules → Response"
+            "MCP path: Client LLM → Streamable HTTP → FastMCP → 7 tool handlers → shared data modules | "
+            "A2A path: Other agents → JSON-RPC 2.0 → a2a-sdk → Llama 3.1 8B (HF Inference) → shared data modules"
         ),
     },
 ]

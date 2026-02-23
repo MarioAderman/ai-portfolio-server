@@ -1,12 +1,13 @@
 ABOUT = {
     "name": "Mario Aderman",
-    "title": "AI Automation Engineer",
+    "title": "AI Automation Engineer & Software Developer",
     "summary": (
         "I help businesses automate processes and build intelligent workflows "
         "using AI. I combine a mechatronics engineering background with 3 years "
         "of professional experience in the automotive industry and a deep focus "
-        "on AI automation — n8n workflows, LangChain/LangGraph agents, and LLM "
-        "integration."
+        "on AI automation — n8n/Langflow workflows, LangChain/LangGraph agents, "
+        "LangSmith observability, and integration of both proprietary and "
+        "open-source LLMs."
     ),
     "background": (
         "My path: Mechatronics Engineering degree → 3 years in the automotive "

@@ -1,6 +1,8 @@
 CONTACT = {
     "preferred_platform": "Upwork",
     "upwork_profile": "https://www.upwork.com/freelancers/marioaderman",
+    "linkedin_profile": "https://www.linkedin.com/in/mario-aderman/",
+    "email": "mario.aderman@gmail.com",
     "github": "https://github.com/mario-aderman",
     "timezone": "CST (America/Mexico_City)",
     "availability": "20-30 hours/week",

@@ -116,7 +116,7 @@ agent_card = AgentCard(
         "projects, services, and availability for AI automation work."
     ),
     version="1.0.0",
-    url="http://localhost:9000/",
+    url="https://agent.fintegra.solutions/",
     defaultInputModes=["text/plain"],
     defaultOutputModes=["text/plain"],
     capabilities=AgentCapabilities(streaming=False, pushNotifications=False),

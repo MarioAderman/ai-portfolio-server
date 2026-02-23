@@ -6,7 +6,7 @@ A dual-protocol personal portfolio: MCP server + A2A agent. Both serve the same 
 ## Rules
 - **Python:** Always run with `uv run python`, never `python` or `python3`
 - **Secrets:** Never hardcode API keys or tokens. Use env vars from `.env`
-- **Language:** All content in English (Upwork audience)
+- **Language:** All content in English
 - **Content:** Shared data lives in `src/data/*.py` as plain Python dicts
 - **MCP server:** `src/mcp_server.py` — FastMCP, port 8000, path `/mcp`
 - **A2A agent:** `src/a2a_server.py` — a2a-sdk, port 9000
