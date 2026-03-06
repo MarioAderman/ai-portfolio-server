@@ -62,16 +62,25 @@ If asked something not covered, say you don't have that information and suggest 
 GROQ_MODEL = "llama-3.1-8b-instant"
 
 
-def get_llm_response(user_message: str) -> str:
-    logger.info("LLM request: model=%s, question='%s'", GROQ_MODEL, user_message[:100])
+def _extract_text(message) -> str:
+    """Extract plain text from an A2A Message."""
+    texts = []
+    for part in message.parts or []:
+        if hasattr(part, "root") and hasattr(part.root, "text"):
+            texts.append(part.root.text)
+        elif hasattr(part, "text"):
+            texts.append(part.text)
+    return " ".join(texts)
+
+
+def get_llm_response(conversation: list[dict[str, str]]) -> str:
+    logger.info("LLM request: model=%s, turns=%d", GROQ_MODEL, len(conversation))
     try:
         client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+        messages = [{"role": "system", "content": PORTFOLIO_CONTEXT}] + conversation
         response = client.chat.completions.create(
             model=GROQ_MODEL,
-            messages=[
-                {"role": "system", "content": PORTFOLIO_CONTEXT},
-                {"role": "user", "content": user_message},
-            ],
+            messages=messages,
             max_tokens=512,
             temperature=0.7,
         )
@@ -85,19 +94,23 @@ def get_llm_response(user_message: str) -> str:
 
 class PortfolioAgentExecutor(AgentExecutor):
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
-        user_message = ""
-        if context.message and context.message.parts:
-            for part in context.message.parts:
-                if hasattr(part, "root") and hasattr(part.root, "text"):
-                    user_message += part.root.text
-                elif hasattr(part, "text"):
-                    user_message += part.text
+        # Build conversation history from previous task messages
+        conversation: list[dict[str, str]] = []
+        if context.task and context.task.history:
+            for msg in context.task.history:
+                role = "assistant" if msg.role == "agent" else "user"
+                text = _extract_text(msg)
+                if text:
+                    conversation.append({"role": role, "content": text})
 
+        # Add current message
+        user_message = _extract_text(context.message) if context.message else ""
         if not user_message:
             user_message = "Tell me about yourself"
+        conversation.append({"role": "user", "content": user_message})
 
-        logger.info("Incoming message: '%s'", user_message[:150])
-        response_text = get_llm_response(user_message)
+        logger.info("Incoming message: '%s' (history: %d turns)", user_message[:150], len(conversation) - 1)
+        response_text = get_llm_response(conversation)
 
         message = Message(
             role="agent",
