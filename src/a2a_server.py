@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [A2A] %(message)s")
 logger = logging.getLogger(__name__)
-from huggingface_hub import InferenceClient
+from groq import Groq
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
@@ -59,14 +59,15 @@ If asked something not covered, say you don't have that information and suggest 
 {json.dumps(CONTACT, indent=2)}
 """
 
-HF_MODEL = "meta-llama/Llama-3.1-8B-Instruct"
+GROQ_MODEL = "llama-3.1-8b-instant"
 
 
 def get_llm_response(user_message: str) -> str:
-    logger.info("LLM request: model=%s, question='%s'", HF_MODEL, user_message[:100])
+    logger.info("LLM request: model=%s, question='%s'", GROQ_MODEL, user_message[:100])
     try:
-        client = InferenceClient(model=HF_MODEL, token=os.getenv("HF_TOKEN"))
-        response = client.chat_completion(
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+        response = client.chat.completions.create(
+            model=GROQ_MODEL,
             messages=[
                 {"role": "system", "content": PORTFOLIO_CONTEXT},
                 {"role": "user", "content": user_message},
