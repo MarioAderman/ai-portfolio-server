@@ -6,10 +6,13 @@ scoring with word count and LLM-judge evaluators.
 Results are pushed to LangSmith.
 
 Usage:
-    uv run python -m evals.run
+    uv run python -m evals.run              # run all variants
+    uv run python -m evals.run --only b     # run only prompt_b_concise
+    uv run python -m evals.run --only a     # run only prompt_a_current
 """
 
 import os
+import sys
 
 from dotenv import load_dotenv
 from groq import Groq
@@ -54,8 +57,16 @@ def main():
             ls.create_example(inputs=inp, dataset_id=dataset.id)
         print(f"Created dataset: {DATASET_NAME} ({len(TEST_INPUTS)} examples)")
 
+    # Filter variants if --only flag is passed
+    variants = PROMPTS
+    if "--only" in sys.argv:
+        idx = sys.argv.index("--only") + 1
+        if idx < len(sys.argv):
+            key = sys.argv[idx].lower()
+            variants = {k: v for k, v in PROMPTS.items() if key in k}
+
     # Run experiments for each prompt variant
-    for variant_name, system_prompt in PROMPTS.items():
+    for variant_name, system_prompt in variants.items():
         print(f"\n{'='*60}")
         print(f"Running experiment: {variant_name}")
         print(f"{'='*60}")
