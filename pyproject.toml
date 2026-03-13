@@ -9,5 +9,6 @@ dependencies = [
     "fastmcp>=2.14.5",
     "groq>=1.0.0",
     "huggingface-hub>=1.4.1",
+    "langsmith>=0.7.17",
     "python-dotenv>=1.2.1",
 ]
