@@ -5,10 +5,10 @@ description = "Personal AI portfolio — MCP server + A2A agent for potential cl
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "a2a-sdk[http-server]>=0.3.23",
-    "fastmcp>=2.14.5",
-    "groq>=1.0.0",
-    "huggingface-hub>=1.4.1",
-    "langsmith>=0.7.17",
-    "python-dotenv>=1.2.1",
+    "a2a-sdk[http-server]==0.3.25",
+    "fastmcp==3.1.0",
+    "groq==1.1.1",
+    "huggingface-hub==1.7.1",
+    "langsmith==0.7.17",
+    "python-dotenv==1.2.2",
 ]

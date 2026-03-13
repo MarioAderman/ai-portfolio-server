@@ -102,8 +102,8 @@ class PortfolioAgentExecutor(AgentExecutor):
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         # Build conversation history from previous task messages
         conversation: list[dict[str, str]] = []
-        if context.task and context.task.history:
-            for msg in context.task.history:
+        if context.current_task and context.current_task.history:
+            for msg in context.current_task.history:
                 role = "assistant" if msg.role == "agent" else "user"
                 text = _extract_text(msg)
                 if text:
