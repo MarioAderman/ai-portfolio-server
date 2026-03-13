@@ -16,7 +16,7 @@ from groq import Groq
 from langsmith import Client, evaluate
 
 from evals.dataset import DATASET_NAME, TEST_INPUTS
-from evals.evaluators import relevance, under_50_words, word_count
+from evals.evaluators import accuracy, completeness, under_50_words, word_count
 from evals.prompts import PROMPTS
 
 load_dotenv()
@@ -69,7 +69,7 @@ def main():
         evaluate(
             make_target(system_prompt),
             data=DATASET_NAME,
-            evaluators=[word_count, under_50_words, relevance],
+            evaluators=[word_count, under_50_words, accuracy, completeness],
             experiment_prefix=variant_name,
         )
 
