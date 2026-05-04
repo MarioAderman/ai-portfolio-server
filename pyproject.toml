@@ -11,4 +11,5 @@ dependencies = [
     "huggingface-hub==1.7.1",
     "langsmith==0.7.17",
     "python-dotenv==1.2.2",
+    "uvicorn>=0.41.0",
 ]

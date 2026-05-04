@@ -11,8 +11,9 @@ Traditional portfolios are static. This one lets potential clients interact with
 ```
 mario-ai-portfolio/
 ├── src/
-│   ├── mcp_server.py        # FastMCP server — 7 tools (port 8000)
-│   ├── a2a_server.py        # A2A agent — (port 9000)
+│   ├── server.py            # Combined ASGI dispatcher (production entry point)
+│   ├── mcp_server.py        # FastMCP server — 7 tools
+│   ├── a2a_server.py        # A2A agent — conversational interface
 │   └── data/                # Shared content modules
 │       ├── about.py
 │       ├── skills.py
@@ -20,9 +21,10 @@ mario-ai-portfolio/
 │       ├── projects.py
 │       ├── experience.py
 │       └── contact.py
-├── Dockerfile.mcp           # MCP server container
-├── Dockerfile.a2a           # A2A agent container
-└── pyproject.toml
+├── Dockerfile               # Combined production image
+├── Dockerfile.mcp           # Standalone MCP server
+├── Dockerfile.a2a           # Standalone A2A agent
+└── render.yaml              # Render deployment config
 ```
 
 ## MCP Server
@@ -46,7 +48,7 @@ Add the following config to your MCP client of choice:
 **Claude Code** — run in your terminal:
 
 ```bash
-claude mcp add mario-portfolio --transport http https://mcp.fintegra.solutions/mcp
+claude mcp add mario-portfolio --transport http https://<your-service>.onrender.com/mcp
 ```
 
 **Claude Desktop** — add to `claude_desktop_config.json`:
@@ -55,7 +57,7 @@ claude mcp add mario-portfolio --transport http https://mcp.fintegra.solutions/m
 {
   "mcpServers": {
     "mario-portfolio": {
-      "url": "https://mcp.fintegra.solutions/mcp"
+      "url": "https://<your-service>.onrender.com/mcp"
     }
   }
 }
@@ -67,7 +69,7 @@ claude mcp add mario-portfolio --transport http https://mcp.fintegra.solutions/m
 {
   "servers": {
     "mario-portfolio": {
-      "url": "https://mcp.fintegra.solutions/mcp"
+      "url": "https://<your-service>.onrender.com/mcp"
     }
   }
 }
@@ -77,9 +79,9 @@ Then just ask your AI assistant anything about Mario — skills, projects, servi
 
 ## A2A Agent — "Have You Met Mario?"
 
-Conversational agent-to-agent interface powered by Llama 3.1 8B via HF Inference API. Supports agent discovery via the [A2A protocol](https://google.github.io/A2A/).
+Conversational agent-to-agent interface powered by Llama 3.1 8B via Groq. Supports agent discovery via the [A2A protocol](https://google.github.io/A2A/).
 
-- **Agent Card:** `https://agent.fintegra.solutions/.well-known/agent-card.json`
+- **Agent Card:** `https://<your-service>.onrender.com/.well-known/agent.json`
 - **Skills:** portfolio_query, service_inquiry, availability_check
 
 ### Interact with the A2A Agent
@@ -87,13 +89,13 @@ Conversational agent-to-agent interface powered by Llama 3.1 8B via HF Inference
 **Discover the agent** — fetch the Agent Card:
 
 ```bash
-curl https://agent.fintegra.solutions/.well-known/agent-card.json
+curl https://<your-service>.onrender.com/.well-known/agent.json
 ```
 
 **Send a message** — via JSON-RPC 2.0:
 
 ```bash
-curl https://agent.fintegra.solutions/ \
+curl https://<your-service>.onrender.com/ \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{
@@ -115,46 +117,62 @@ curl https://agent.fintegra.solutions/ \
 ```python
 from a2a.client import A2AClient
 
-async with A2AClient(url="https://agent.fintegra.solutions/") as client:
+async with A2AClient(url="https://<your-service>.onrender.com/") as client:
     card = await client.get_card()
     print(card.name)  # "Have You Met Mario? — AI Automation Engineer"
-
-    response = await client.send_message(
-        message={"role": "user", "parts": [{"kind": "text", "text": "What services do you offer?"}], "messageId": "msg-001"}
-    )
-    print(response)
 ```
 
 Any A2A-compatible agent or orchestrator can discover and interact with this agent automatically via the Agent Card endpoint.
 
 ## Tech Stack
 
-- **MCP:** [FastMCP](https://github.com/jlowin/fastmcp) v2 — Python, Streamable HTTP
+- **MCP:** [FastMCP](https://github.com/jlowin/fastmcp) v3 — Python, Streamable HTTP
 - **A2A:** [a2a-sdk](https://github.com/a2aproject/a2a-python) — Official SDK, JSON-RPC 2.0
-- **LLM:** Llama 3.1 8B Instruct via HF Inference API
-- **Deployment:** Docker, EasyPanel, Hostinger VPS
-- **Domain:** `fintegra.solutions` (subdomains: `mcp.*`, `agent.*`)
+- **LLM:** Llama 3.1 8B Instant via [Groq](https://groq.com)
+- **Deployment:** Docker, [Render](https://render.com) (free tier)
 
 ## Run Locally
 
-```bash
-# MCP server (port 8000)
-uv run python -m src.mcp_server
+Requires `GROQ_API_KEY` in a `.env` file.
 
-# A2A agent (port 9000) — requires HF_TOKEN in .env
-uv run python -m src.a2a_server
+```bash
+# Combined server (MCP + A2A on port 8000)
+uv run python -m uvicorn src.server:app --reload
+
+# Or run services independently:
+uv run python -m uvicorn src.mcp_server:app --port 8000   # MCP only
+uv run python -m uvicorn src.a2a_server:app --port 9000   # A2A only
+```
+
+Verify locally:
+
+```bash
+curl http://localhost:8000/health
+curl http://localhost:8000/.well-known/agent.json
 ```
 
 ## Deployment
 
-Two Docker services deployed via EasyPanel on Hostinger VPS:
+Single Docker service deployed on [Render](https://render.com) free tier.
 
-| Service | Dockerfile | Port | Domain |
-|---------|-----------|------|--------|
-| MCP Server | `Dockerfile.mcp` | 8000 | `mcp.fintegra.solutions` |
-| A2A Agent | `Dockerfile.a2a` | 9000 | `agent.fintegra.solutions` |
+| Endpoint | Path |
+|----------|------|
+| Health | `/health` |
+| MCP Server | `/mcp` |
+| A2A Agent Card | `/.well-known/agent.json` |
+| A2A Messages | `POST /` |
 
-HTTPS via Let's Encrypt (managed by EasyPanel/Traefik).
+The service stays permanently warm via a [UptimeRobot](https://uptimerobot.com) monitor pinging `/health` every 5 minutes (free plan).
+
+### Deploy your own
+
+1. Fork this repo
+2. Create a [Render](https://render.com) account (no credit card required)
+3. **New → Web Service** → connect your fork — Render detects `render.yaml` automatically
+4. Set environment variables:
+   - `GROQ_API_KEY` — your [Groq API key](https://console.groq.com)
+   - `AGENT_URL` — the Render service URL (set after first deploy)
+5. Set up a free [UptimeRobot](https://uptimerobot.com) HTTP monitor on `/health` at 5-minute intervals
 
 ## License
 

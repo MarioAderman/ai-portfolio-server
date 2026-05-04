@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: mario-ai-portfolio
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: AGENT_URL
+        sync: false

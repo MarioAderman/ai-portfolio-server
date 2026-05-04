@@ -788,6 +788,7 @@ dependencies = [
     { name = "huggingface-hub" },
     { name = "langsmith" },
     { name = "python-dotenv" },
+    { name = "uvicorn" },
 ]
 
 [package.metadata]
@@ -798,6 +799,7 @@ requires-dist = [
     { name = "huggingface-hub", specifier = "==1.7.1" },
     { name = "langsmith", specifier = "==0.7.17" },
     { name = "python-dotenv", specifier = "==1.2.2" },
+    { name = "uvicorn", specifier = ">=0.41.0" },
 ]
 
 [[package]]

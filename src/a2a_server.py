@@ -136,7 +136,7 @@ agent_card = AgentCard(
         "projects, services, and availability for AI automation work."
     ),
     version="1.0.0",
-    url="https://agent.fintegra.solutions/",
+    url=os.getenv("AGENT_URL", "https://mario-ai-portfolio.onrender.com/"),
     defaultInputModes=["text/plain"],
     defaultOutputModes=["text/plain"],
     capabilities=AgentCapabilities(streaming=False, pushNotifications=False),
