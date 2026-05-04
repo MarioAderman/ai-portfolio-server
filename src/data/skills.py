@@ -30,7 +30,8 @@ SKILLS = {
         "category": "Frontend & UI",
         "items": [
             {"name": "Gradio", "level": "Intermediate", "notes": "AI app prototypes and demos"},
-            {"name": "React", "level": "Intermediate", "notes": "State management, hooks, interfaces for AI tools — plus HTML/CSS/JS fundamentals"},
+            {"name": "React / Next.js", "level": "Intermediate", "notes": "State management, hooks, interfaces for AI tools — plus HTML/CSS/JS fundamentals"},
+            {"name": "TypeScript", "level": "Intermediate", "notes": "Used in Next.js projects and LangChain.js integrations"},
         ],
     },
 }

@@ -6,15 +6,21 @@ EXPERIENCE = {
             "description": (
                 "Building AI-powered automation solutions and software for businesses. "
                 "Specializing in n8n/Langflow workflows, LangChain/LangGraph agents, "
-                "LangSmith observability, and integration of both proprietary and "
-                "open-source LLMs. Working with international clients on Upwork."
+                "LangSmith observability, and integration of both proprietary and open-source LLMs. "
+                "Working directly with international clients on Upwork — scoping requirements, "
+                "designing systems, and delivering end-to-end. Also advising individuals "
+                "one-on-one on how to improve their workflows using AI, including non-technical "
+                "professionals with zero prior tech exposure."
             ),
             "highlights": [
                 "Multi-agent chatbot system with voice/image processing (n8n, GPT-4, Whisper, Cal.com)",
                 "LangGraph financial advisor with 9 tools, chart generation, CRUD with human-in-the-loop, and multi-provider LLM support",
                 "Dual-protocol AI portfolio server — MCP (FastMCP) + A2A agent (Llama 3.1 8B)",
+                "Systems design lead across multiple client projects — translating business needs into agent architectures and automation pipelines",
+                "AI workflow consulting for individuals: 1-on-1 advisory on adopting AI into daily workflows, including non-technical professionals",
                 "MCP Hackathon — contributed to DeepCritical/The DETERMINATOR, a deep research agent system (PydanticAI, LlamaIndex, Modal)",
-                "x402 Hackathon — led MCP integration for CreditNexus, a payment-protected MCP server + autonomous agent on Aptos/EVM (FastMCP, LangChain.js, x402 Protocol)",
+                "x402 Hackathon — led MCP integration for CreditNexus, a payment-protected MCP server + autonomous agent on Aptos/EVM (FastMCP, LangChain.js, x402 Protocol) — Top 5 finalist, x402 Conquest",
+                "Genius Arena @ Talent Land 2026 (Capital One track) — AgriScore, cloud-native agricultural credit scoring platform using satellite data (Sentinel-2/Copernicus), Claude tool-use agent, AWS Step Functions + Fargate, and ML scoring model — Top 4 finalist",
             ],
         },
         {

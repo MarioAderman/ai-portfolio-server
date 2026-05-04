@@ -67,7 +67,7 @@ PROJECTS = [
         "name": "AI Portfolio Server",
         "slug": "ai-portfolio",
         "one_liner": "Dual-protocol AI portfolio — MCP server for structured tool access + A2A agent for conversational discovery",
-        "tech_stack": ["FastMCP", "a2a-sdk", "Python", "Streamable HTTP", "Llama 3.1 8B", "HF Inference", "Docker", "EasyPanel"],
+        "tech_stack": ["FastMCP", "a2a-sdk", "Python", "Streamable HTTP", "Llama 3.1 8B", "Groq", "Docker", "Render"],
         "problem": (
             "Traditional portfolios are static — clients read a page and move on. "
             "I wanted potential clients to interact with my portfolio using their "
@@ -76,22 +76,56 @@ PROJECTS = [
         "solution": (
             "Built a dual-protocol server: an MCP server with 7 tools for structured "
             "portfolio queries, and an A2A agent (\"Have You Met Mario?\") powered by "
-            "Llama 3.1 8B for conversational agent-to-agent interaction. Both share "
-            "the same data layer and deploy as separate Docker services. "
+            "Llama 3.1 8B via Groq for conversational agent-to-agent interaction. Both share "
+            "the same data layer in a single combined service. "
             "The medium demonstrates the skill being sold."
         ),
         "key_features": [
             "MCP server: 7 tools (about, skills, services, projects, experience, contact) via Streamable HTTP",
-            "A2A agent: conversational portfolio discovery using Llama 3.1 8B via HF Inference",
+            "A2A agent: conversational portfolio discovery using Llama 3.1 8B via Groq",
             "Shared data layer — both protocols serve the same content modules",
             "Zero-friction MCP connection — just paste a URL into any compatible client",
-            "A2A Agent Card at /.well-known/agent-card.json for automated agent discovery",
-            "Deployed on Hostinger VPS via EasyPanel with auto HTTPS",
+            "A2A Agent Card at /.well-known/agent.json for automated agent discovery",
+            "Deployed on Render free tier with UptimeRobot keep-warm monitor",
             "The server itself is a portfolio piece demonstrating MCP and A2A expertise",
         ],
         "architecture": (
             "MCP path: Client LLM → Streamable HTTP → FastMCP → 7 tool handlers → shared data modules | "
-            "A2A path: Other agents → JSON-RPC 2.0 → a2a-sdk → Llama 3.1 8B (HF Inference) → shared data modules"
+            "A2A path: Other agents → JSON-RPC 2.0 → a2a-sdk → Llama 3.1 8B (Groq) → shared data modules"
+        ),
+    },
+    {
+        "name": "AgriScore",
+        "slug": "agriscore",
+        "one_liner": "Cloud-native agricultural credit scoring platform using satellite data, Claude AI agent, and ML — Top 4 at Talent Land 2026",
+        "tech_stack": ["Python", "FastAPI", "Next.js", "TypeScript", "AWS Fargate", "AWS Lambda", "Step Functions", "Claude (tool-use)", "scikit-learn", "PostgreSQL", "PostGIS", "Sentinel-2", "WhatsApp"],
+        "problem": (
+            "Unbanked farmers in Mexico lack access to credit because they have no "
+            "traditional credit bureau history. Financial institutions have no reliable "
+            "way to assess their creditworthiness, leaving them excluded from formal financing."
+        ),
+        "solution": (
+            "Built AgriScore, a cloud-native platform that generates verified agricultural "
+            "credit profiles using alternative data: satellite imagery (NDVI via Sentinel-2/Copernicus), "
+            "climate data (Open-Meteo, NASA POWER), socioeconomic indicators (INEGI), and "
+            "AI document processing (Claude Vision). A conversational Claude agent guides "
+            "farmers through onboarding via WhatsApp. A Random Forest ML model produces "
+            "a credit score on a 300-850 scale."
+        ),
+        "key_features": [
+            "Claude tool-use agent on WhatsApp — guides farmers through onboarding conversationally",
+            "AWS Step Functions pipeline with 6 parallel Lambda steps: document extraction, satellite fetch, climate fetch, socioeconomic data, ML scoring, report generation",
+            "Satellite NDVI analysis via Sentinel Hub (Copernicus/Sentinel-2) to assess crop health and land use",
+            "Random Forest ML model trained on synthetic data — 300-850 credit score scale",
+            "3 isolated Fargate services: AI agent core, REST API for financial institutions, WhatsApp bridge",
+            "Next.js + TypeScript dashboard with gamification for farmers",
+            "Top 4 finalist — Genius Arena @ Talent Land 2026, Capital One 'Finanzas para un Futuro Sostenible' track",
+        ],
+        "architecture": (
+            "WhatsApp → EvolutionAPI bridge → FastAPI Core (Claude tool-use agent) → "
+            "Step Functions pipeline [ExtractDocs | FetchSatellite ∥ FetchClimate ∥ FetchSocioeconomic | CalculateScore | GenerateExpediente] → "
+            "PostgreSQL+PostGIS | REST API (Fargate) → Next.js dashboard | "
+            "Financial institutions query via authenticated REST API"
         ),
     },
 ]
